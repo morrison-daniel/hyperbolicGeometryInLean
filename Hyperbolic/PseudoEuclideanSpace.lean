@@ -15,28 +15,42 @@ end Sign
 @[reducible]
 structure PseudoEuclideanSpace (𝕜 : Type _) (ι : Type _) [IsROrC 𝕜] [Fintype ι] [DecidableEq ι] where
   signature : ι → Sign
-  inner := fun (v w : ι → 𝕜) => ∑ i, conj (v i) * (w i) * ofReal (signature (i))
 
 attribute [class] PseudoEuclideanSpace
 
-namespace PseudoEuclideanSpace
-
 variable {𝕜 : Type _} [IsROrC 𝕜]
 variable {ι : Type _} [Fintype ι] [DecidableEq ι]
-variable [E : PseudoEuclideanSpace 𝕜 ι]
+variable {E : PseudoEuclideanSpace 𝕜 ι}
 
-instance instPseudoInnerProductSpaceofPseudoEuclideanSpace [E : PseudoEuclideanSpace 𝕜 ι] :
-PseudoInnerProductSpace 𝕜 (ι → 𝕜) where
-  inner := E.inner
-  conj_symm := sorry
-  add_left := sorry
+instance PseudoEuclideanInnerProduct (E : PseudoEuclideanSpace 𝕜 ι) : Inner 𝕜 (ι → 𝕜) :=
+  ⟨ fun (v w : ι → 𝕜) => ∑ i, conj (v i) * (w i) * ofReal (E.signature (i)) ⟩
+
+lemma inner_eval {E : PseudoEuclideanSpace 𝕜 ι} (v w : ι → 𝕜) :
+  (PseudoEuclideanInnerProduct E).inner v w = ∑ i, conj (v i) * (w i) * ofReal (E.signature (i)) :=
+  by rfl
+
+instance instPseudoInnerProductSpaceofPseudoEuclideanSpace (E : PseudoEuclideanSpace 𝕜 ι) :
+  PseudoInnerProductSpace 𝕜 (ι → 𝕜) where
+  inner := (PseudoEuclideanInnerProduct E).inner
+  conj_symm := by
+    intro x y
+    rw [inner_eval, inner_eval, map_sum]
+    apply congrArg (Finset.sum Finset.univ)
+    ext i
+    rw [map_mul, map_mul, conj_ofReal, conj_conj]
+    simp [mul_comm]
+  add_left := by
+    intro x y z
+    rw [inner_eval, inner_eval, inner_eval, ← Finset.sum_add_distrib]
+    apply congrArg
+    ext i
+    sorry
   smul_left := sorry
   nondeg := sorry
 
-lemma inner_eval (v w : ι → 𝕜) :
-  E.inner v w = ∑ i, conj (v i) * (w i) * ofReal (E.signature (i)) := by simp
+namespace PseudoEuclideanSpace
 
-local notation "⟪" x ", " y "⟫" => instPseudoInnerProductSpaceofPseudoEuclideanSpace.inner x y
+local notation "⟪" x ", " y "⟫" => @inner 𝕜 (ι → 𝕜) (PseudoEuclideanInnerProduct E) x y
 
 variable (x y : ι → 𝕜)
 #check ⟪x, y⟫
