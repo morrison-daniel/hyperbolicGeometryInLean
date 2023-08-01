@@ -10,6 +10,8 @@ class PseudoInnerProductSpace (𝕜 : Type _) (E : Type _) [IsROrC 𝕜] [AddCom
   add_left : ∀ x y z, inner (x + y) z = inner x z + inner y z
   /-- The inner product is conjugate linear in the first coordinate. --/
   smul_left : ∀ x y r, inner (r • x) y = conj r * inner x y
+  /-- The inner product is nondegenerate. --/
+  nondeg : ∀ x, (∀ y, inner x y = 0) → x = 0
 
 namespace PseudoInnerProductSpace
 
@@ -74,6 +76,16 @@ theorem inner_sub_left (x y z : E) : ⟪x - y, z⟫ = ⟪x, z⟫ - ⟪y, z⟫ :=
 
 theorem inner_sub_right (x y z : E) : ⟪x, y - z⟫ = ⟪x, y⟫ - ⟪x, z⟫ := by
   simp [sub_eq_add_neg, inner_add_right]
+
+theorem inner_nondeg_left (x : E) : (∀ y, ⟪x, y⟫ = 0) → x = 0 := nondeg x
+
+theorem inner_nondeg_right (y : E) : (∀ x, ⟪x, y⟫ = 0) → y = 0 := by
+  rintro hy
+  apply @inner_nondeg_left 𝕜 _ _
+  intro x
+  specialize hy x
+  rw [← inner_conj_symm, map_eq_zero]
+  exact hy
 
 @[simps!]
 def sesqFormOfInner : E →ₗ[𝕜] E →ₗ⋆[𝕜] 𝕜 :=
