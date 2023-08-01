@@ -1,6 +1,7 @@
 import Mathlib.Analysis.InnerProductSpace.Basic
+import Mathlib.Algebra.BigOperators.Basic
 
-open ComplexConjugate IsROrC
+open ComplexConjugate IsROrC BigOperators
 
 class PseudoInnerProductSpace (𝕜 : Type _) (E : Type _) [IsROrC 𝕜] [AddCommGroup E] [Module 𝕜 E]
   extends Inner 𝕜 E where
@@ -92,6 +93,12 @@ def sesqFormOfInner : E →ₗ[𝕜] E →ₗ⋆[𝕜] 𝕜 :=
   LinearMap.mk₂'ₛₗ (RingHom.id 𝕜) (starRingEnd _) (fun x y => ⟪y, x⟫)
     (fun _x _y _z => inner_add_right _ _ _) (fun _r _x _y => inner_smul_right _ _ _)
     (fun _x _y _z => inner_add_left _ _ _) fun _r _x _y => inner_smul_left _ _ _
+
+theorem inner_sum_left {ι : Type _} [Fintype ι] (f : ι → E) (y : E) :
+  ⟪(∑ i, f i), y⟫ = ∑ i, ⟪f i, y⟫ := map_sum (sesqFormOfInner (𝕜 := 𝕜) (E := E) y) _ _
+
+theorem inner_sum_right {ι : Type _} [Fintype ι] (f : ι → E) (x : E) :
+  ⟪x, (∑ i, f i)⟫ = ∑ i, ⟪x, f i⟫ := (LinearMap.flip sesqFormOfInner x).map_sum
 
 @[simp]
 def bilinFormOfRealInner : BilinForm ℝ F where

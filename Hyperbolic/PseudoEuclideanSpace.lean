@@ -1,5 +1,4 @@
 import Hyperbolic.PseudoInnerProductSpace
-import Mathlib.Algebra.BigOperators.Basic
 
 open BigOperators ComplexConjugate IsROrC
 
@@ -19,16 +18,25 @@ structure PseudoEuclideanSpace (𝕜 : Type _) (ι : Type _) [IsROrC 𝕜] [Fint
 
 attribute [class] PseudoEuclideanSpace
 
+namespace PseudoEuclideanSpace
+
 variable {𝕜 : Type _} [IsROrC 𝕜]
 variable {ι : Type _} [Fintype ι] [DecidableEq ι]
-variable {E : PseudoEuclideanSpace 𝕜 ι}
+variable [PseudoEuclideanSpace 𝕜 ι]
 
-instance : PseudoInnerProductSpace 𝕜 (ι → 𝕜) where
+instance instPseudoInnerProductSpaceofPseudoEuclideanSpace [E : PseudoEuclideanSpace 𝕜 ι] :
+PseudoInnerProductSpace 𝕜 (ι → 𝕜) where
   inner := E.inner
-  conj_symm := sorry
+  conj_symm := by
+    intro x y
+    
   add_left := sorry
   smul_left := sorry
   nondeg := sorry
 
+local notation "⟪" x ", " y "⟫" => instPseudoInnerProductSpaceofPseudoEuclideanSpace.inner x y
 
+variable (x y : ι → 𝕜)
+#check ⟪x, y⟫
 
+end PseudoEuclideanSpace
