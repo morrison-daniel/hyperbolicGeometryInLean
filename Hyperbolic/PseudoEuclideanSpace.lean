@@ -49,8 +49,6 @@ def instPseudoInnerProductSpaceofPseudoEuclideanSpace (E : PseudoEuclideanSpace 
 
 namespace PseudoEuclideanSpace
 
-variable {𝕜 : Type _} [IsROrC 𝕜]
-variable {ι : Type _} [Fintype ι] [DecidableEq ι]
 variable [E : PseudoEuclideanSpace 𝕜 ι]
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 (ι → 𝕜) (PseudoEuclideanInnerProduct E) x y
