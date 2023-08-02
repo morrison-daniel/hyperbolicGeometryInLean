@@ -20,16 +20,15 @@ attribute [class] PseudoEuclideanSpace
 
 variable {𝕜 : Type _} [IsROrC 𝕜]
 variable {ι : Type _} [Fintype ι] [DecidableEq ι]
-variable {E : PseudoEuclideanSpace 𝕜 ι}
 
-instance PseudoEuclideanInnerProduct (E : PseudoEuclideanSpace 𝕜 ι) : Inner 𝕜 (ι → 𝕜) :=
+def PseudoEuclideanInnerProduct (E : PseudoEuclideanSpace 𝕜 ι) : Inner 𝕜 (ι → 𝕜) :=
   ⟨ fun (v w : ι → 𝕜) => ∑ i, conj (v i) * (w i) * ofReal (E.signature (i)) ⟩
 
 lemma inner_eval {E : PseudoEuclideanSpace 𝕜 ι} (v w : ι → 𝕜) :
   (PseudoEuclideanInnerProduct E).inner v w = ∑ i, conj (v i) * (w i) * ofReal (E.signature (i)) :=
   by rfl
 
-instance instPseudoInnerProductSpaceofPseudoEuclideanSpace (E : PseudoEuclideanSpace 𝕜 ι) :
+def instPseudoInnerProductSpaceofPseudoEuclideanSpace (E : PseudoEuclideanSpace 𝕜 ι) :
   PseudoInnerProductSpace 𝕜 (ι → 𝕜) where
   inner := (PseudoEuclideanInnerProduct E).inner
   conj_symm := by
@@ -50,9 +49,29 @@ instance instPseudoInnerProductSpaceofPseudoEuclideanSpace (E : PseudoEuclideanS
 
 namespace PseudoEuclideanSpace
 
+variable {𝕜 : Type _} [IsROrC 𝕜]
+variable {ι : Type _} [Fintype ι] [DecidableEq ι]
+variable [E : PseudoEuclideanSpace 𝕜 ι]
+
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 (ι → 𝕜) (PseudoEuclideanInnerProduct E) x y
 
 variable (x y : ι → 𝕜)
 #check ⟪x, y⟫
+
+def TimeLike (v : ι → 𝕜)      : Prop := re ⟪v, v⟫ <  0
+def UnitTimeLike (v : ι → 𝕜)  : Prop := re ⟪v, v⟫ = -1
+def LightLike (v : ι → 𝕜)     : Prop := re ⟪v, v⟫ =  0
+def SpaceLike (v : ι → 𝕜)     : Prop := re ⟪v, v⟫ >  0
+def UnitSpaceLike (v : ι → 𝕜) : Prop := re ⟪v, v⟫ =  1
+
+theorem timelike_of_unittimelike {v : ι → 𝕜} (h : UnitTimeLike v) : TimeLike v := by
+  rw [UnitTimeLike] at h
+  rw [TimeLike, h]
+  exact neg_one_lt_zero
+
+theorem spacelike_of_unitspacelike {v : ι → 𝕜} (h : UnitSpaceLike v) : SpaceLike v := by
+  rw [UnitSpaceLike] at h
+  rw [SpaceLike, h]
+  exact zero_lt_one
 
 end PseudoEuclideanSpace
