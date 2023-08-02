@@ -55,9 +55,6 @@ variable [E : PseudoEuclideanSpace 𝕜 ι]
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 (ι → 𝕜) (PseudoEuclideanInnerProduct E) x y
 
-variable (x y : ι → 𝕜)
-#check ⟪x, y⟫
-
 def TimeLike (v : ι → 𝕜)      : Prop := re ⟪v, v⟫ <  0
 def UnitTimeLike (v : ι → 𝕜)  : Prop := re ⟪v, v⟫ = -1
 def LightLike (v : ι → 𝕜)     : Prop := re ⟪v, v⟫ =  0
