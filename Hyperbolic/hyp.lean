@@ -26,6 +26,38 @@ structure PseudoEuclideanSpace where
     bilin_smul_right := sorry
   }
 
+-- structure PseudoEuclideanSpace where
+--   dim : Nat
+--   signature : Fin dim → Sign
+--   -- hs : ∀ i, signature i = 1 ∨ signature i = -1
+--   form : BilinForm ℝ (Fin dim → ℝ) := {
+--     bilin := fun v w ↦ ∑ i, (v i) * (w i) * (signature i)
+--     bilin_add_left := by
+--       intro x y z
+--       rw [← Finset.sum_add_distrib]
+--       rw [Finset.sum_congr rfl]
+--       intro i _
+--       simp; linarith
+--     bilin_add_right := by
+--       intro x y z
+--       rw [← Finset.sum_add_distrib]
+--       rw [Finset.sum_congr rfl]
+--       intro i _
+--       simp; linarith
+--     bilin_smul_left := by
+--       intro a x y
+--       rw [Finset.mul_sum]
+--       rw [Finset.sum_congr rfl]
+--       intro i _
+--       simp; linarith
+--     bilin_smul_right := by
+--       intro a x y
+--       rw [Finset.mul_sum]
+--       rw [Finset.sum_congr rfl]
+--       intro i _
+--       simp; linarith
+--   }
+
 namespace Minkowski
 
 @[reducible]
