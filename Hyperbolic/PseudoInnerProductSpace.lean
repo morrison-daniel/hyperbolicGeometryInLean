@@ -17,7 +17,6 @@ class PseudoInnerProductSpace (𝕜 : Type _) (E : Type _) [IsROrC 𝕜] [AddCom
 namespace PseudoInnerProductSpace
 
 variable {𝕜 E : Type _} [IsROrC 𝕜] [AddCommGroup E] [Module 𝕜 E] [PseudoInnerProductSpace 𝕜 E]
-variable {F : Type _} [AddCommGroup F] [Module ℝ F] [PseudoInnerProductSpace ℝ F]
 
 local notation "⟪" x ", " y "⟫" => @inner 𝕜 E _ x y
 
@@ -100,10 +99,12 @@ theorem inner_sum_left {ι : Type _} [Fintype ι] (f : ι → E) (y : E) :
 theorem inner_sum_right {ι : Type _} [Fintype ι] (f : ι → E) (x : E) :
   ⟪x, (∑ i, f i)⟫ = ∑ i, ⟪x, f i⟫ := (LinearMap.flip sesqFormOfInner x).map_sum
 
+variable {F : Type _} [AddCommGroup F] [Module ℝ F] [PseudoInnerProductSpace ℝ F]
+
 @[simp]
 def bilinFormOfRealInner : BilinForm ℝ F where
   bilin := inner
   bilin_add_left := inner_add_left
-  bilin_smul_left _a _x _y := inner_smul_left _ _ _
+  bilin_smul_left a x y := inner_smul_left _ _ _
   bilin_add_right := inner_add_right
-  bilin_smul_right _a _x _y := by rw [inner_smul_right]
+  bilin_smul_right a x y := by rw [inner_smul_right]
