@@ -22,9 +22,9 @@ def UnitSpaceLike (v : M) : Prop := ⟪v, v⟫ =  1
 
 def Future (v : M) : Prop := v 0 > 0
 
-def Hyperboloid (v : M) : Prop := UnitTimeLike v ∧ Future v
+def OnHyperboloid (v : M) : Prop := UnitTimeLike v ∧ Future v
 
-noncomputable def hdist (v w : M) {_ : Hyperboloid v} {_ : Hyperboloid w} : M → M → ℝ :=
+noncomputable def hdist (v w : M) {_ : OnHyperboloid v} {_ : OnHyperboloid w} : M → M → ℝ :=
   fun v w => Real.arcosh (- ⟪v, w⟫)
 
 namespace MinkowskiSpace

@@ -10,9 +10,6 @@ def PReal := { r : ℝ // 0 < r }
 
 instance : Coe PReal ℝ := ⟨ fun p => p.val ⟩
 
-#check cosh_eq
-#check mul_left_cancel_iff_of_pos
-
 @[reducible]
 noncomputable def arcosh (x : ℝ) :=
   log (x + sqrt (x ^ 2 - 1))
@@ -49,8 +46,6 @@ lemma arcosh_cosh (x : ℝ) (h : x ≥ 0) : arcosh (cosh x) = x := by
   rw [cosh_eq, sinh_eq]
   ring_nf
   exact log_exp x
-
-#check sqrt_sq_eq_abs
 
 lemma arcosh_cosh_neg (x : ℝ) (h : x < 0) : arcosh (cosh x) = -x := by
   rw [arcosh, cosh_sq]
